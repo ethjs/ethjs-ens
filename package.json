@@ -4,7 +4,7 @@
   "description": "An ENS interface module built on EthJS.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,17 @@
   },
   "homepage": "https://github.com/flyswatter/ethjs-ens#readme",
   "dependencies": {
-    "ethjs-contract": "^0.1.7"
+    "eth-ens-namehash": "^1.0.2",
+    "ethjs-contract": "^0.1.7",
+    "ethjs-query": "^0.2.4",
+    "idna-uts46": "^1.0.1",
+    "js-sha3": "^0.5.7",
+    "var": "^0.2.0"
+  },
+  "devDependencies": {
+    "ethjs": "^0.2.5",
+    "ethjs-provider-http": "^0.1.6",
+    "ethjs-query": "^0.2.4",
+    "tape": "^4.6.3"
   }
 }
