@@ -30,7 +30,7 @@ class Ens {
 
     this.network = String(network)
     if (!(this.network in networkMap)) {
-      return this.emit('error', new Error('No registry for current network.'))
+      throw new Error('No registry for current network.')
     }
 
     // Link to Registry
