@@ -2,7 +2,6 @@
 const Eth = require('ethjs-query')
 const EthContract = require('ethjs-contract')
 const namehash = require('eth-ens-namehash')
-const EventEmitter = require('events').EventEmitter
 
 // ABIs
 const registryAbi = require('./abis/registry.json')
@@ -11,10 +10,9 @@ const resolverAbi = require('./abis/resolver.json')
 // Map network to known ENS registries
 const networkMap = require('./lib/network-map.json')
 
-class Ens extends EventEmitter {
+class Ens {
 
   constructor (opts = {}) {
-    super()
     let { provider, network } = opts
 
     // Validations
