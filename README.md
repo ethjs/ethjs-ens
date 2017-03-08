@@ -2,6 +2,8 @@
 
 A convenience interface for using the Ethereum Name Service, based on the EthJS contract abstraction.
 
+[Live Demo](https://flyswatter.github.io/ethjs-ens)
+
 ## Installation
 
 Install from npm:
