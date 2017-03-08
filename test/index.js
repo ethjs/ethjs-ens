@@ -20,8 +20,10 @@ test('lookup nobodywantsthisdomain.eth resolver', function (t) {
 
   ens.lookup('nobodywantsthisdomain.eth')
   .then((address) => {
-    const expected = '0x0000000000000000000000000000000000000000'
-    t.equal(address, expected)
+    t.ok(!address)
+  })
+  .catch((reason) => {
+    t.equal(reason.message, 'ENS name not found.')
   })
 })
 
@@ -29,6 +31,9 @@ test('lookup empty resolver', function (t) {
   t.plan(1)
 
   ens.lookup('')
+  .then((address) => {
+    t.ok(!address)
+  })
   .catch((reason) => {
     t.equal(reason.message, 'ENS name not found.')
   })
