@@ -35,6 +35,11 @@ function setupEns (provider) {
       alert("That's how you do it!")
     }
   })
+  .catch((reason) => {
+    // There was an issue!
+    // Maybe the name wasn't registered!
+    console.error(reason)
+  })
 }
 ```
 
