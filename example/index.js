@@ -5,8 +5,10 @@ let ens
 // For MetaMask or Mist compatibility:
 window.addEventListener('load', function() {
   if (typeof window.web3 !== 'undefined') {
+    console.log('web3 browser detected, using.')
     ens = new ENS({ provider: web3.currentProvider, network: '3' })
   } else {
+    console.log('no web3 browser detected, using infura.')
     const provider = new HttpProvider('https://ropsten.infura.io')
     ens = new ENS({ provider, network: '3' })
   }
