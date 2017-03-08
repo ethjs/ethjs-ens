@@ -24,3 +24,13 @@ test('lookup nobodywantsthisdomain.eth resolver', function (t) {
     t.equal(address, expected)
   })
 })
+
+test('lookup empty resolver', function (t) {
+  t.plan(1)
+
+  ens.lookup('')
+  .catch((reason) => {
+    t.equal(reason.message, 'ENS name not found.')
+  })
+})
+

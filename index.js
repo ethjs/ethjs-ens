@@ -9,6 +9,7 @@ const resolverAbi = require('./abis/resolver.json')
 
 // Map network to known ENS registries
 const networkMap = require('./lib/network-map.json')
+const empty = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 class Ens {
 
@@ -45,6 +46,9 @@ class Ens {
 
   lookup (name = '') {
     const node = namehash(name)
+    if (node === empty) {
+      return Promise.reject(new Error('ENS name not found.'))
+    }
     return this.registry.owner(node)
     .then((ownerAddress) => {
       return ownerAddress[0]
