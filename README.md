@@ -10,7 +10,7 @@ Install from npm:
 
 ## Usage
 
-```
+```javascript
 const ENS = require('../')
 const HttpProvider = require('ethjs-provider-http')
 
