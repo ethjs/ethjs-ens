@@ -4,7 +4,8 @@
   "description": "An ENS interface module built on EthJS.",
   "main": "index.js",
   "scripts": {
-    "test": "node test"
+    "test": "node test",
+    "build": "browserify example/index.js -o example/bundle.js"
   },
   "repository": {
     "type": "git",
