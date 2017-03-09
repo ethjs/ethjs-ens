@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
-    "test": "npm run lint && istanbul cover test && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
-    "build": "browserify example/index.js -o example/bundle.js"
+    "test": "npm run lint && istanbul cover test && npm run coveralls",
+    "build": "browserify example/index.js -o example/bundle.js",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",

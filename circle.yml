@@ -8,6 +8,5 @@ dependencies:
     - "npm i -g coveralls"
 test:
   post:
-    - npm run coveralls
     - mkdir -p $CIRCLE_ARTIFACTS/
     - mv ./coverage/lcov.info  $CIRCLE_ARTIFACTS/coverage-report
