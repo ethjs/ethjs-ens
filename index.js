@@ -17,7 +17,7 @@ const NotFoundError = new Error('ENS name not found.')
 class Ens {
 
   constructor (opts = {}) {
-    let { provider, network } = opts
+    const { provider, network } = opts
 
     // Validations
     if (!provider) {
