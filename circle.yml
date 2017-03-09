@@ -5,6 +5,7 @@ dependencies:
   pre:
     - "npm i -g istanbul"
     - "npm i -g eslint"
+    - "npm i -g coveralls"
 test:
   post:
     - npm run coveralls
