@@ -47,7 +47,8 @@ class Ens {
     this.resolver = this.Resolver.at(resolverAddress)
   }
 
-  lookup (name = '') {
+  getOwner (name = '') {
+    console.log('getting owner')
     const node = namehash(name)
     if (node === emptyHash) {
       return Promise.reject(NotFoundError)
@@ -61,6 +62,24 @@ class Ens {
 
       return ownerAddress
     })
+  }
+
+  lookup (name = '') {
+    console.log('looking up..')
+    return this.getOwner(name)
+  }
+
+  reverse (address) {
+    if (!address) {
+      throw new Error('Must supply an address to reverse lookup.')
+    }
+
+    if (address.startsWith('0x')) {
+      address = address.slice(2)
+    }
+
+    const name = `${address.toLowerCase()}.addr.reverse`
+    return this.lookup(name)
   }
 
 }
