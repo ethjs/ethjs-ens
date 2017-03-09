@@ -7,5 +7,6 @@ dependencies:
     - "npm i -g eslint"
 test:
   post:
+    - npm run coveralls
     - mkdir -p $CIRCLE_ARTIFACTS/
-    - mv ./coverage/coverage.json  $CIRCLE_ARTIFACTS/coverage-report
+    - mv ./coverage/lcov.info  $CIRCLE_ARTIFACTS/coverage-report
