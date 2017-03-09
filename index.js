@@ -31,6 +31,7 @@ class Ens {
     this.provider = provider
     this.eth = new Eth(this.provider)
     this.contract = new EthContract(this.eth)
+    this.namehash = namehash
 
     this.network = String(network)
     if (!(this.network in networkMap)) {
@@ -44,6 +45,21 @@ class Ens {
 
     // Create Resolver class
     this.Resolver = this.contract(resolverAbi)
+  }
+
+  lookup (name = '') {
+    const node = namehash(name)
+    if (node === emptyHash) {
+      return Promise.reject(NotFoundError)
+    }
+
+    return this.resolveAddressForNode(node)
+    .catch((reason) => {
+      if (reason === ResolverNotFound) {
+        return this.getOwnerForNode(node)
+      }
+      throw reason
+    })
   }
 
   getOwner (name = '') {
@@ -65,7 +81,6 @@ class Ens {
       return ownerAddress
     })
   }
-
 
   getResolver (name = '') {
     const node = namehash(name)
@@ -89,21 +104,6 @@ class Ens {
       }
 
       return resolverAddress
-    })
-  }
-
-  lookup (name = '') {
-    const node = namehash(name)
-    if (node === emptyHash) {
-      return Promise.reject(NotFoundError)
-    }
-
-    return this.resolveAddressForNode(node)
-    .catch((reason) => {
-      if (reason === ResolverNotFound) {
-        return this.getOwnerForNode(node)
-      }
-      throw reason
     })
   }
 

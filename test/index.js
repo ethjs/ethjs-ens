@@ -1,4 +1,11 @@
 const test = require('tape')
+
+/*
+var fs = require('fs');
+var solc = require('solc');
+var TestRPC = require('ethereumjs-testrpc');
+*/
+
 const HttpProvider = require('ethjs-provider-http')
 const provider = new HttpProvider('https://ropsten.infura.io')
 
@@ -56,6 +63,17 @@ test('getResolver empty name', function (t) {
   })
 })
 
+test('getResolver resistance.eth', function (t) {
+  t.plan(1)
+
+  const node = ens.namehash('resistance.eth')
+  ens.getResolverForNode(node)
+  .then((address) => {
+    const expected = '0x4c641fb9bad9b60ef180c31f56051ce826d21a9a'
+    t.equal(address, expected)
+  })
+})
+
 test('lookup resolver for node', function (t) {
   t.plan(1)
 
@@ -88,7 +106,17 @@ test('lookup eth owner', function (t) {
   })
 })
 
-test('lookup vitalik.eth address', function (t) {
+test('lookup resistance.eth address', function (t) {
+  t.plan(1)
+
+  ens.lookup('vitalik.eth')
+  .then((address) => {
+    const expected = '0x5f8f68a0d1cbc75f6ef764a44619277092c32df0'
+    t.equal(address, expected)
+  })
+})
+
+test('lookup vitalik.eth address should fail to owner', function (t) {
   t.plan(1)
 
   ens.lookup('vitalik.eth')
@@ -103,6 +131,20 @@ test('lookup nobodywantsthisdomain.eth address', function (t) {
 
   ens.lookup('nobodywantsthisdomain.eth')
   .catch((reason) => {
+    t.equal(reason.message, 'ENS name not found.')
+  })
+})
+
+test('lookup bar.eth address', function (t) {
+  t.plan(1)
+
+  ens.lookup('bar.eth')
+  .then((address) => {
+    console.log('BAR ETH: ' + address)
+    t.equal(address, '0xd0b85aad460f5835c2349fbdd065b2389c921ce1')
+  })
+  .catch((reason) => {
+    console.log('VACATION RENTALS FAIL')
     t.equal(reason.message, 'ENS name not found.')
   })
 })
