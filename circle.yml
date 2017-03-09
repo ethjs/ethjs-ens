@@ -4,6 +4,6 @@ machine:
 dependencies:
   pre:
     - "npm i -g istanbul"
-post:
-  - mkdir -p $CIRCLE_ARTIFACTS/
-  - mv ./coverage/coverage-baseline.json  $CIRCLE_ARTIFACTS/coverage-report
+  post:
+    - mkdir -p $CIRCLE_ARTIFACTS/
+    - mv ./coverage/coverage-baseline.json  $CIRCLE_ARTIFACTS/coverage-report
