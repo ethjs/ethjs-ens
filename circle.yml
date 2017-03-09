@@ -7,4 +7,4 @@ dependencies:
     - "npm i -g eslint"
   post:
     - mkdir -p $CIRCLE_ARTIFACTS/
-    - mv ./coverage/coverage-baseline.json  $CIRCLE_ARTIFACTS/coverage-report
+    - mv ./coverage/coverage.json  $CIRCLE_ARTIFACTS/coverage-report
