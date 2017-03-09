@@ -77,4 +77,6 @@ function ttl(bytes32 node) constant returns (uint64);
 
 ## Current Supported Networks
 
+Network support is added by adding a registry for that network to the [network map](./lib/network-map.json).
+
 - Ropsten (id 3)
