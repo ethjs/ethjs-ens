@@ -13,6 +13,7 @@ const emptyHash = '0x00000000000000000000000000000000000000000000000000000000000
 const emptyAddr = '0x0000000000000000000000000000000000000000'
 
 const NotFoundError = new Error('ENS name not found.')
+const ResolverNotFound = new Error('ENS resolver not found.')
 
 class Ens {
 
@@ -41,15 +42,16 @@ class Ens {
     const registryAddress = networkMap[this.network].registry
     this.registry = this.Registry.at(registryAddress)
 
-    // Link to Resolver
+    // Create Resolver class
     this.Resolver = this.contract(resolverAbi)
-    const resolverAddress = networkMap[this.network].resolver
-    this.resolver = this.Resolver.at(resolverAddress)
   }
 
   getOwner (name = '') {
-    console.log('getting owner')
     const node = namehash(name)
+    return this.getOwnerForNode(node)
+  }
+
+  getOwnerForNode (node) {
     if (node === emptyHash) {
       return Promise.reject(NotFoundError)
     }
@@ -64,9 +66,60 @@ class Ens {
     })
   }
 
+
+  getResolver (name = '') {
+    const node = namehash(name)
+    if (node === emptyHash) {
+      return Promise.reject(NotFoundError)
+    }
+
+    return this.getResolverForNode(node)
+  }
+
+  getResolverForNode (node) {
+    if (!node.startsWith('0x')) {
+      node = `0x${node}`
+    }
+
+    return this.registry.resolver(node)
+    .then((result) => {
+      const resolverAddress = result[0]
+      if (resolverAddress === emptyAddr) {
+        throw ResolverNotFound
+      }
+
+      return resolverAddress
+    })
+  }
+
   lookup (name = '') {
-    console.log('looking up..')
-    return this.getOwner(name)
+    const node = namehash(name)
+    if (node === emptyHash) {
+      return Promise.reject(NotFoundError)
+    }
+
+    return this.resolveAddressForNode(node)
+    .catch((reason) => {
+      if (reason === ResolverNotFound) {
+        return this.getOwnerForNode(node)
+      }
+      throw reason
+    })
+  }
+
+  resolveAddressForNode (node) {
+    return this.getResolverForNode(node)
+    .then((resolverAddress) => {
+      const resolver = this.Resolver.at(resolverAddress)
+      return resolver.addr(node)
+    })
+    .then(result => result[0])
+    .catch((reason) => {
+      if (reason === ResolverNotFound) {
+        return this.getOwnerForNode(node)
+      }
+      throw reason
+    })
   }
 
   reverse (address) {

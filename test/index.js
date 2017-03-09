@@ -19,7 +19,7 @@ test('not providing a provider throws', function (t) {
   })
 })
 
-test('getOwner vitalik.eth resolver', function (t) {
+test('getOwner for vitalik.eth', function (t) {
   t.plan(1)
 
   ens.getOwner('vitalik.eth')
@@ -29,7 +29,7 @@ test('getOwner vitalik.eth resolver', function (t) {
   })
 })
 
-test('getOwner nobodywantsthisdomain.eth resolver', function (t) {
+test('getOwner for nobodywantsthisdomain.eth', function (t) {
   t.plan(1)
 
   ens.getOwner('nobodywantsthisdomain.eth')
@@ -38,7 +38,7 @@ test('getOwner nobodywantsthisdomain.eth resolver', function (t) {
   })
 })
 
-test('getOwner empty resolver', function (t) {
+test('getOwner empty name', function (t) {
   t.plan(1)
 
   ens.getOwner('')
@@ -47,7 +47,48 @@ test('getOwner empty resolver', function (t) {
   })
 })
 
-test('lookup vitalik.eth resolver', function (t) {
+test('getResolver empty name', function (t) {
+  t.plan(1)
+
+  ens.getOwner('')
+  .catch((reason) => {
+    t.equal(reason.message, 'ENS name not found.')
+  })
+})
+
+test('lookup resolver for node', function (t) {
+  t.plan(1)
+
+  ens.getResolverForNode('b14f00d09893a6ac3c1afa508fb7cd5ccfb7be4482df12738a0e93f95811c99c')
+  .then((address) => {
+    const expected = '0x71e122fc87aa184b966dfaaa81f9f37f45da9bae'
+    t.equal(address, expected)
+  })
+})
+
+test('#resolveAddressForNode on ropsten', function (t) {
+  t.plan(1)
+
+  const node = '0xb14f00d09893a6ac3c1afa508fb7cd5ccfb7be4482df12738a0e93f95811c99c'
+  const expected = '0x7cb57b5a97eabe94205c07890be4c1ad31e486a8'
+
+  ens.resolveAddressForNode(node)
+  .then((address) => {
+    t.equal(address, expected)
+  })
+})
+
+test('lookup eth owner', function (t) {
+  t.plan(1)
+
+  ens.getOwner('eth')
+  .then((address) => {
+    const expected = '0xc68de5b43c3d980b0c110a77a5f78d3c4c4d63b4'
+    t.equal(address, expected)
+  })
+})
+
+test('lookup vitalik.eth address', function (t) {
   t.plan(1)
 
   ens.lookup('vitalik.eth')
@@ -57,7 +98,7 @@ test('lookup vitalik.eth resolver', function (t) {
   })
 })
 
-test('lookup nobodywantsthisdomain.eth resolver', function (t) {
+test('lookup nobodywantsthisdomain.eth address', function (t) {
   t.plan(1)
 
   ens.lookup('nobodywantsthisdomain.eth')
@@ -66,7 +107,7 @@ test('lookup nobodywantsthisdomain.eth resolver', function (t) {
   })
 })
 
-test('lookup empty resolver', function (t) {
+test('lookup empty address', function (t) {
   t.plan(1)
 
   ens.lookup('')
@@ -82,11 +123,9 @@ test('reverse lookup vitalik.eth', function (t) {
   ens.reverse('0x5f8f68a0d1cbc75f6ef764a44619277092c32df0')
   .then((address) => {
     const expected = 'vitalik.eth'
-    console.log('returned ' + address)
     t.equal(address, expected)
   })
   .catch((reason) => {
-    console.log('failed bc ', reason)
   })
 })
 */
