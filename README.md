@@ -1,6 +1,6 @@
 # EthJS ENS [![CircleCI](https://circleci.com/gh/flyswatter/ethjs-ens.svg?style=svg)](https://circleci.com/gh/flyswatter/ethjs-ens)
 
-A convenience interface for using the Ethereum Name Service, based on the EthJS contract abstraction.
+A convenience interface for using the Ethereum Name Service, based on the [EthJS contract abstraction](https://github.com/ethjs/ethjs-contract).
 
 [Live Demo](https://flyswatter.github.io/ethjs-ens)
 
