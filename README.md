@@ -45,3 +45,36 @@ function setupEns (provider) {
 }
 ```
 
+## Available APIs
+
+### ens.lookup( name )
+
+Takes a valid [ENS](https://ens.readthedocs.io/en/latest/introduction.html) name, like `vitalik.eth`, or `some.specialname.eth`.
+
+Returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) that resolves to a hex-prefixed hexadecimal string for the resolved address.
+
+If a matching name can not be found, will throw:
+
+```javascript
+new Error('ENS name not found.')
+```
+
+### ens.registry
+
+An [ethjs contract](https://github.com/flyswatter/ethjs-ens) instance initialized for the specified network's address.
+
+Implements the registry interface specified in [EIP 137](https://github.com/ethereum/EIPs/issues/137):
+
+```
+function owner(bytes32 node) constant returns (address);
+Returns the owner (registrar) of the specified node.
+
+function resolver(bytes32 node) constant returns (address);
+Returns the resolver for the specified node.
+
+function ttl(bytes32 node) constant returns (uint64);
+```
+
+## Current Supported Networks
+
+- Ropsten (id 3)
