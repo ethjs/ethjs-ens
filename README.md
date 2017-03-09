@@ -1,4 +1,7 @@
-# EthJS ENS [![CircleCI](https://circleci.com/gh/flyswatter/ethjs-ens.svg?style=svg)](https://circleci.com/gh/flyswatter/ethjs-ens)
+# EthJS ENS
+
+[![CircleCI](https://circleci.com/gh/flyswatter/ethjs-ens.svg?style=svg)](https://circleci.com/gh/flyswatter/ethjs-ens)
+[![Coverage Status](https://coveralls.io/repos/github/flyswatter/ethjs-ens/badge.svg?branch=master)](https://coveralls.io/github/flyswatter/ethjs-ens?branch=master)
 
 A convenience interface for using the Ethereum Name Service, based on the [EthJS contract abstraction](https://github.com/ethjs/ethjs-contract).
 
