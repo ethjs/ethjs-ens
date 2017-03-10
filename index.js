@@ -91,26 +91,45 @@ class Ens {
     return this.getResolverForNode(node)
   }
 
+  getResolverAddress (name = '') {
+    const node = namehash(name)
+    if (node === emptyHash) {
+      return Promise.reject(NotFoundError)
+    }
+
+    return this.getResolverAddressForNode(node)
+  }
+
   getResolverForNode (node) {
+    console.log('getting resolver for node ' + node)
     if (!node.startsWith('0x')) {
       node = `0x${node}`
     }
 
+    return this.getResolverAddressForNode(node)
+    .then((resolverAddress) => {
+      console.log('returning resolver at ' + resolverAddress)
+      return this.Resolver.at(resolverAddress)
+    })
+  }
+
+  getResolverAddressForNode (node) {
     return this.registry.resolver(node)
     .then((result) => {
       const resolverAddress = result[0]
+      console.log('registry resolver called back with ' + resolverAddress)
       if (resolverAddress === emptyAddr) {
         throw ResolverNotFound
       }
-
       return resolverAddress
     })
   }
 
   resolveAddressForNode (node) {
+    console.log('resolveAddressForNode')
     return this.getResolverForNode(node)
-    .then((resolverAddress) => {
-      const resolver = this.Resolver.at(resolverAddress)
+    .then((resolver) => {
+      console.log('resolver for node')
       return resolver.addr(node)
     })
     .then(result => result[0])
@@ -123,6 +142,7 @@ class Ens {
   }
 
   reverse (address) {
+
     if (!address) {
       throw new Error('Must supply an address to reverse lookup.')
     }
@@ -133,6 +153,14 @@ class Ens {
 
     const name = `${address.toLowerCase()}.addr.reverse`
     return this.lookup(name)
+
+    /*
+    console.log('reversing', address)
+    const name = `${address.toLowerCase()}.addr.reverse`
+    const node = this.namehash(name)
+    console.log('reversing node ' + node)
+    return this.getResolverAddressForNode(node)
+    */
   }
 
 }

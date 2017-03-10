@@ -20,7 +20,7 @@ const resolverAbi = require('../abis/resolver.json')
 const source = fs.readFileSync(__dirname + '/ens.sol').toString();
 const compiled = solc.compile(source, 1)
 const deployer = compiled.contracts[':DeployENS']
-let deploy, ensRoot, ens, accounts
+let deploy, ensRoot, ens, accounts, deployRoot
 
 test('setup', { timeout: 5000 }, function (t) {
 
@@ -46,7 +46,7 @@ test('setup', { timeout: 5000 }, function (t) {
       const txHash = cont.transactionHash
       pollForTransaction(txHash)
       .then((tx) => {
-        const deployRoot = tx.contractAddress
+        deployRoot = tx.contractAddress
 
         const EthjsDeploy = contract(interface)
         const ethjsDeploy = EthjsDeploy.at(deployRoot)
@@ -55,8 +55,7 @@ test('setup', { timeout: 5000 }, function (t) {
       })
       .then((addr) => {
         ensRoot = addr[0]
-        console.dir(addr)
-        console.log('virtual ens live at ' + addr)
+        console.log('virtual ens live at ' + ensRoot)
         ens = new ENS({ provider, registryAddress: ensRoot })
         t.ok(true)
         t.end()
@@ -66,7 +65,7 @@ test('setup', { timeout: 5000 }, function (t) {
 })
 
 test('#getResolver() with invalid name should throw', function (t) {
-  ens.getResolver('danfinlay.eth')
+  ens.getResolver('havasupai.eth')
   .catch((result) => {
     t.equal(result.message, 'ENS resolver not found.')
     t.end()
@@ -86,6 +85,44 @@ test('#lookup() should get resolver addresses', function (t) {
   .then((result) => {
     t.notEqual(result, emptyAddress)
     t.end()
+  })
+})
+
+test('#lookup() with bad name should throw', function (t) {
+  ens.lookup('cardassian.eth')
+  .catch((reason) => {
+    t.equal(reason.message, 'ENS name not found.')
+    t.end()
+  })
+})
+
+test('#reverse() on deployRoot', function (t) {
+  ens.lookup('deployer.eth')
+  .then(address => ens.reverse(address))
+  .then((result) => {
+    t.equal(result, 'deployer.eth')
+    t.end()
+  })
+  .catch((reason) => {
+    console.log('reverse on deployroot failed', reason)
+  })
+})
+
+test('#reverse() looks up name for an address', function (t) {
+  ens.getResolverAddress('foo.eth')
+  .then((address) => {
+    console.log('foo.eth resolver is ' + address)
+    console.dir(address)
+    return ens.reverse(address)
+  })
+  .then((reverse) => {
+    console.log('reverse is ' + reverse)
+    console.dir(reverse)
+    t.equal(reverse, 'deployer.eth')
+    t.end()
+  })
+  .catch((reason) => {
+    console.log('failed baceause ', reason)
   })
 })
 
