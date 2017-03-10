@@ -2,14 +2,18 @@ const test = require('tape')
 
 const Eth = require('ethjs-query')
 const EthContract = require('ethjs-contract')
+const Web3 = require('web3')
 const fs = require('fs');
 const solc = require('solc');
 const TestRPC = require('ethereumjs-testrpc');
 const ENS = require('../')
 
+const emptyAddress = '0x0000000000000000000000000000000000000000'
+
 const provider = TestRPC.provider()
 const eth = new Eth(provider)
-const contract = new EthContract()
+const web3 = new Web3(provider)
+const contract = new EthContract(eth)
 
 const registryAbi = require('../abis/registry.json')
 const resolverAbi = require('../abis/resolver.json')
@@ -18,38 +22,83 @@ const compiled = solc.compile(source, 1)
 const deployer = compiled.contracts[':DeployENS']
 let deploy, ensRoot, ens, accounts
 
-test('setup', { timeout: 20000 }, function (t) {
+test('setup', { timeout: 5000 }, function (t) {
 
-  console.log('getting accounts')
   eth.accounts()
   .then((result) => {
     accounts = result
+    console.log(`primary account: ${accounts[0]}`)
 
-    console.log('got accounts, deploying')
-    const Deploy = contract(deployer.interface, deployer.bytecode, {
+    const interface = JSON.parse(deployer.interface)
+    var deployensContract = web3.eth.contract(JSON.parse(deployer.interface));
+
+    // Deploy the contract
+    const deployens = deployensContract.new({
       from: accounts[0],
+      data: deployer.bytecode,
       gas: 4700000,
-    })
+    }, function(err, cont) {
+      t.notOk(err, 'deploying contract should not throw error')
 
-    deploy = Deploy.new((err, result) => {
-      console.log('deploy created: ' + result)
-      return deploy.ens()
-      .catch((reason) => {
-        console.log('deploy.ens failed bc ', reason)
+      // We don't need the second callback.
+      if (cont.address) return
+
+      const txHash = cont.transactionHash
+      pollForTransaction(txHash)
+      .then((tx) => {
+        const deployRoot = tx.contractAddress
+
+        const EthjsDeploy = contract(interface)
+        const ethjsDeploy = EthjsDeploy.at(deployRoot)
+
+        return ethjsDeploy.ens()
       })
-    })
-    .then((ensAddr) => {
-      console.log('fetched ens? ' + ensAddr)
-      ensRoot = ensAddr
-      ens = new ENS({ provider, registryAddress: ensRoot })
-      t.ok(true)
-      t.end()
-    })
-    .catch((reason) => {
-      console.log('failed bc ', reason)
+      .then((addr) => {
+        ensRoot = addr[0]
+        console.dir(addr)
+        console.log('virtual ens live at ' + addr)
+        ens = new ENS({ provider, registryAddress: ensRoot })
+        t.ok(true)
+        t.end()
+      })
     })
   })
 })
+
+test('#getResolver() with invalid name should throw', function (t) {
+  ens.getResolver('danfinlay.eth')
+  .catch((result) => {
+    t.equal(result.message, 'ENS resolver not found.')
+    t.end()
+  })
+})
+
+test('#getResolver() should get resolver addresses', function (t) {
+  ens.getResolver('foo.eth')
+  .then((result) => {
+    t.notEqual(result, emptyAddress)
+    t.end()
+  })
+})
+
+test('#lookup() should get resolver addresses', function (t) {
+  ens.lookup('foo.eth')
+  .then((result) => {
+    t.notEqual(result, emptyAddress)
+    t.end()
+  })
+})
+
+function pollForTransaction(txHash) {
+  let tx
+  return eth.getTransactionReceipt(txHash)
+  .then((result) => {
+    if (!result) {
+      return pollForTransaction(txHash)
+    }
+    return result
+  })
+}
 
 /*
 test('not providing a network throws', function (t) {

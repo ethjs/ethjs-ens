@@ -36,11 +36,6 @@ class Ens {
     this.contract = new EthContract(this.eth)
     this.namehash = namehash
 
-    this.network = String(network)
-    if (!(this.network in networkMap)) {
-      throw new Error('No registry for current network.')
-    }
-
     // Link to Registry
     this.Registry = this.contract(registryAbi)
     if (!registryAddress && network) {
