@@ -29,7 +29,8 @@ if (typeof window.web3 !== 'undefined') {
 
 function setupEns (provider) {
 
-  // Currently requires both provider and network params:
+  // Currently requires both provider and
+  // either a network or registryAddress param
   const ens = new ENS({ provider, network: '3' })
 
   ens.lookup('vitalik.eth')

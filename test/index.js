@@ -1,24 +1,66 @@
 const test = require('tape')
 
-/*
-var fs = require('fs');
-var solc = require('solc');
-var TestRPC = require('ethereumjs-testrpc');
-*/
-
-const HttpProvider = require('ethjs-provider-http')
-const provider = new HttpProvider('https://ropsten.infura.io')
-
+const Eth = require('ethjs-query')
+const EthContract = require('ethjs-contract')
+const fs = require('fs');
+const solc = require('solc');
+const TestRPC = require('ethereumjs-testrpc');
 const ENS = require('../')
-const ens = new ENS({ provider, network: '3' })
 
+const provider = TestRPC.provider()
+const eth = new Eth(provider)
+const contract = new EthContract()
+
+const registryAbi = require('../abis/registry.json')
+const resolverAbi = require('../abis/resolver.json')
+const source = fs.readFileSync(__dirname + '/ens.sol').toString();
+const compiled = solc.compile(source, 1)
+const deployer = compiled.contracts[':DeployENS']
+let deploy, ensRoot, ens, accounts
+
+test('setup', { timeout: 20000 }, function (t) {
+
+  console.log('getting accounts')
+  eth.accounts()
+  .then((result) => {
+    accounts = result
+
+    console.log('got accounts, deploying')
+    const Deploy = contract(deployer.interface, deployer.bytecode, {
+      from: accounts[0],
+      gas: 4700000,
+    })
+
+    deploy = Deploy.new((err, result) => {
+      console.log('deploy created: ' + result)
+      return deploy.ens()
+      .catch((reason) => {
+        console.log('deploy.ens failed bc ', reason)
+      })
+    })
+    .then((ensAddr) => {
+      console.log('fetched ens? ' + ensAddr)
+      ensRoot = ensAddr
+      ens = new ENS({ provider, registryAddress: ensRoot })
+      t.ok(true)
+      t.end()
+    })
+    .catch((reason) => {
+      console.log('failed bc ', reason)
+    })
+  })
+})
+
+/*
 test('not providing a network throws', function (t) {
+  console.log(accounts)
   t.plan(1)
   t.throws(function() {
     const sample = new ENS({ provider })
   })
 })
 
+/*
 test('not providing a provider throws', function (t) {
   t.plan(1)
   t.throws(function() {
@@ -171,3 +213,4 @@ test('reverse lookup vitalik.eth', function (t) {
   })
 })
 */
+

@@ -32,10 +32,12 @@
   },
   "devDependencies": {
     "coveralls": "^2.12.0",
+    "ethereumjs-testrpc": "^3.0.3",
     "ethjs": "^0.2.5",
     "ethjs-provider-http": "^0.1.6",
     "ethjs-query": "^0.2.4",
     "istanbul": "^0.4.5",
+    "solc": "^0.4.9",
     "tape": "^4.6.3"
   }
 }

@@ -19,13 +19,16 @@ class Ens {
 
   constructor (opts = {}) {
     const { provider, network } = opts
+    let { registryAddress } = opts
 
     // Validations
     if (!provider) {
       throw new Error('The EthJsENS Constructor requires a provider.')
     }
-    if (!network) {
-      throw new Error('The EthJsENS Constructor requires a network.')
+
+    // Requires EITHER a network or a registryAddress
+    if (!network && !registryAddress) {
+      throw new Error('The EthJsENS Constructor requires a network or registry address.')
     }
 
     this.provider = provider
@@ -40,7 +43,9 @@ class Ens {
 
     // Link to Registry
     this.Registry = this.contract(registryAbi)
-    const registryAddress = networkMap[this.network].registry
+    if (!registryAddress && network) {
+      registryAddress = networkMap[this.network].registry
+    }
     this.registry = this.Registry.at(registryAddress)
 
     // Create Resolver class
