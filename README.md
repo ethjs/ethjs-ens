@@ -63,6 +63,12 @@ If a matching name can not be found, will throw:
 new Error('ENS name not found.')
 ```
 
+### ens.reverse( address )
+
+Takes an ethereum address (hex-encoded), and attempts to look up a corresponding name on the registry's reverse-registrar.
+
+Returns a promise that resolves a string if a name exists, or throws if it does not.
+
 ### ens.registry
 
 An [ethjs contract](https://github.com/flyswatter/ethjs-ens) instance initialized for the specified network's address.
