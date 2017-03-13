@@ -39,7 +39,7 @@ class Ens {
     // Link to Registry
     this.Registry = this.contract(registryAbi)
     if (!registryAddress && network) {
-      registryAddress = networkMap[this.network].registry
+      registryAddress = networkMap[network].registry
     }
     this.registry = this.Registry.at(registryAddress)
 
@@ -54,12 +54,6 @@ class Ens {
     }
 
     return this.resolveAddressForNode(node)
-    .catch((reason) => {
-      if (reason === ResolverNotFound) {
-        return this.getOwnerForNode(node)
-      }
-      throw reason
-    })
   }
 
   getOwner (name = '') {
@@ -101,14 +95,12 @@ class Ens {
   }
 
   getResolverForNode (node) {
-    console.log('getting resolver for node ' + node)
     if (!node.startsWith('0x')) {
       node = `0x${node}`
     }
 
     return this.getResolverAddressForNode(node)
     .then((resolverAddress) => {
-      console.log('returning resolver at ' + resolverAddress)
       return this.Resolver.at(resolverAddress)
     })
   }
@@ -117,7 +109,6 @@ class Ens {
     return this.registry.resolver(node)
     .then((result) => {
       const resolverAddress = result[0]
-      console.log('registry resolver called back with ' + resolverAddress)
       if (resolverAddress === emptyAddr) {
         throw ResolverNotFound
       }
@@ -126,10 +117,8 @@ class Ens {
   }
 
   resolveAddressForNode (node) {
-    console.log('resolveAddressForNode')
     return this.getResolverForNode(node)
     .then((resolver) => {
-      console.log('resolver for node')
       return resolver.addr(node)
     })
     .then(result => result[0])
@@ -142,7 +131,6 @@ class Ens {
   }
 
   reverse (address) {
-
     if (!address) {
       throw new Error('Must supply an address to reverse lookup.')
     }
@@ -152,15 +140,13 @@ class Ens {
     }
 
     const name = `${address.toLowerCase()}.addr.reverse`
-    return this.lookup(name)
+    const node = namehash(name)
 
-    /*
-    console.log('reversing', address)
-    const name = `${address.toLowerCase()}.addr.reverse`
-    const node = this.namehash(name)
-    console.log('reversing node ' + node)
-    return this.getResolverAddressForNode(node)
-    */
+    return this.getResolverForNode(node)
+    .then((resolver) => {
+      return resolver.name(node)
+    })
+    .then(results => results[0])
   }
 
 }
