@@ -29,7 +29,8 @@ if (typeof window.web3 !== 'undefined') {
 
 function setupEns (provider) {
 
-  // Currently requires both provider and network params:
+  // Currently requires both provider and
+  // either a network or registryAddress param
   const ens = new ENS({ provider, network: '3' })
 
   ens.lookup('vitalik.eth')
@@ -61,6 +62,12 @@ If a matching name can not be found, will throw:
 ```javascript
 new Error('ENS name not found.')
 ```
+
+### ens.reverse( address )
+
+Takes an ethereum address (hex-encoded), and attempts to look up a corresponding name on the registry's reverse-registrar.
+
+Returns a promise that resolves a string if a name exists, or throws if it does not.
 
 ### ens.registry
 
