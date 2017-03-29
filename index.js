@@ -8,7 +8,7 @@ const registryAbi = require('./abis/registry.json')
 const resolverAbi = require('./abis/resolver.json')
 
 // Map network to known ENS registries
-const networkMap = require('./lib/network-map.json')
+const networkMap = require('ethereum-ens-network-map')
 const emptyHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const emptyAddr = '0x0000000000000000000000000000000000000000'
 
@@ -39,7 +39,7 @@ class Ens {
     // Link to Registry
     this.Registry = this.contract(registryAbi)
     if (!registryAddress && network) {
-      registryAddress = networkMap[network].registry
+      registryAddress = networkMap[network]
     }
     this.registry = this.Registry.at(registryAddress)
 
