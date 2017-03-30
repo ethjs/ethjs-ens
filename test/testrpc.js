@@ -7,6 +7,7 @@ const fs = require('fs');
 const solc = require('solc');
 const TestRPC = require('ethereumjs-testrpc');
 const ENS = require('../')
+const namehash = require('eth-ens-namehash')
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 
@@ -78,6 +79,23 @@ test('#getResolver() should get resolver addresses', function (t) {
   })
 })
 
+test('#getResolverAddress with valid name returns address.', function (t) {
+  ens.getResolverAddress('foo.eth')
+  .then((result) => {
+    t.notEqual(result, emptyAddress)
+    t.end()
+  })
+})
+
+test('#getResolverForNode with no hex prefix adds it.', function (t) {
+  const node = namehash('foo.eth').substr(2)
+  ens.getResolverForNode(node)
+  .then((result) => {
+    t.notEqual(result, emptyAddress)
+    t.end()
+  })
+})
+
 test('#lookup() should get resolver addresses', function (t) {
   ens.lookup('foo.eth')
   .then((result) => {
@@ -114,6 +132,8 @@ test('#reverse() throws on unknown address.', function (t) {
     t.end()
   })
 })
+
+
 
 function pollForTransaction(txHash) {
   let tx

@@ -78,19 +78,11 @@ class Ens {
 
   getResolver (name = '') {
     const node = namehash(name)
-    if (node === emptyHash) {
-      return Promise.reject(NotFoundError)
-    }
-
     return this.getResolverForNode(node)
   }
 
   getResolverAddress (name = '') {
     const node = namehash(name)
-    if (node === emptyHash) {
-      return Promise.reject(NotFoundError)
-    }
-
     return this.getResolverAddressForNode(node)
   }
 
