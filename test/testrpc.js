@@ -1,4 +1,5 @@
 const test = require('tape')
+const sinon = require('sinon')
 
 const Eth = require('ethjs-query')
 const EthContract = require('ethjs-contract')
@@ -18,8 +19,7 @@ const contract = new EthContract(eth)
 
 const registryAbi = require('../abis/registry.json')
 const resolverAbi = require('../abis/resolver.json')
-const source = fs.readFileSync(__dirname + '/ens.sol').toString();
-const compiled = solc.compile(source, 1)
+const source = fs.readFileSync(__dirname + '/ens.sol').toString(); const compiled = solc.compile(source, 1)
 const deployer = compiled.contracts[':DeployENS']
 let deploy, ensRoot, ens, accounts, deployRoot
 
@@ -133,7 +133,17 @@ test('#reverse() throws on unknown address.', function (t) {
   })
 })
 
+test('#resolveAddressForNode() returns other errors that occur', function (t) {
+  const mock = sinon.mock(ens)
+  const message = 'Random error'
+  mock.expects('getResolverForNode').returns(Promise.reject(message))
 
+  ens.resolveAddressForNode('0xDeadBeef')
+  .catch((reason) => {
+    t.equal(reason, message)
+    t.end()
+  })
+})
 
 function pollForTransaction(txHash) {
   let tx
