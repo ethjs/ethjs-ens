@@ -124,7 +124,7 @@ class Ens {
 
   reverse (address) {
     if (!address) {
-      throw new Error('Must supply an address to reverse lookup.')
+      return Promise.reject(new Error('Must supply an address to reverse lookup.'))
     }
 
     if (address.startsWith('0x')) {

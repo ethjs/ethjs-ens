@@ -122,21 +122,12 @@ test('#reverse() on deployRoot', function (t) {
 
 test('#reverse() with no address provided throws', function (t) {
   ens.reverse()
-  .catch((reason) => {
-    t.ok(reason)
-    t.end()
-  })
-})
-
-test('#reverse() throws on unknown address.', function (t) {
-  t.plan(1)
-  ens.reverse('0x01')
   .then((result) => {
     t.notOk(result)
     t.end()
   })
   .catch((reason) => {
-    t.ok(true)
+    t.ok(reason)
     t.end()
   })
 })
@@ -149,9 +140,20 @@ test('#resolveAddressForNode() returns other errors that occur', function (t) {
   ens.resolveAddressForNode('0xDeadBeef')
   .catch((reason) => {
     t.equal(reason, message)
+    mock.restore()
     t.end()
   })
 })
+
+test('#reverse() throws on unknown address.', function (t) {
+  t.plan(1)
+  ens.reverse('0x01')
+  .catch((reason) => {
+    t.ok(true)
+    t.end()
+  })
+})
+
 
 function pollForTransaction(txHash) {
   let tx
