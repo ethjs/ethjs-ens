@@ -78,19 +78,11 @@ class Ens {
 
   getResolver (name = '') {
     const node = namehash(name)
-    if (node === emptyHash) {
-      return Promise.reject(NotFoundError)
-    }
-
     return this.getResolverForNode(node)
   }
 
   getResolverAddress (name = '') {
     const node = namehash(name)
-    if (node === emptyHash) {
-      return Promise.reject(NotFoundError)
-    }
-
     return this.getResolverAddressForNode(node)
   }
 
@@ -132,7 +124,7 @@ class Ens {
 
   reverse (address) {
     if (!address) {
-      throw new Error('Must supply an address to reverse lookup.')
+      return Promise.reject(new Error('Must supply an address to reverse lookup.'))
     }
 
     if (address.startsWith('0x')) {
