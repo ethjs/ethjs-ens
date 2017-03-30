@@ -120,6 +120,14 @@ test('#reverse() on deployRoot', function (t) {
   })
 })
 
+test('#reverse() with no address provided throws', function (t) {
+  ens.reverse()
+  .catch((reason) => {
+    t.notEqual(reason, null)
+    t.end()
+  })
+})
+
 test('#reverse() throws on unknown address.', function (t) {
   t.plan(1)
   ens.reverse('0x01')
