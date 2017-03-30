@@ -123,7 +123,7 @@ test('#reverse() on deployRoot', function (t) {
 test('#reverse() with no address provided throws', function (t) {
   ens.reverse()
   .catch((reason) => {
-    t.notEqual(reason, null)
+    t.ok(reason)
     t.end()
   })
 })
