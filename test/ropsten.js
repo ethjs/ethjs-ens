@@ -97,7 +97,7 @@ test('lookup eth owner', function (t) {
 
   ens.getOwner('eth')
   .then((address) => {
-    const expected = '0xc68de5b43c3d980b0c110a77a5f78d3c4c4d63b4'
+    const expected = '0xc19fd9004b5c9789391679de6d766b981db94610'
     t.equal(address, expected)
   })
 })
