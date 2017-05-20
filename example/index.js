@@ -9,8 +9,8 @@ window.addEventListener('load', function() {
     ens = new ENS({ provider: web3.currentProvider, network: '3' })
   } else {
     console.log('no web3 browser detected, using infura.')
-    const provider = new HttpProvider('https://ropsten.infura.io')
-    ens = new ENS({ provider, network: '3' })
+    const provider = new HttpProvider('https://miannet.infura.io')
+    ens = new ENS({ provider, network: '1' })
   }
 })
 
