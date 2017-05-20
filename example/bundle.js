@@ -2868,18 +2868,26 @@ module.exports=[
 },{}],8:[function(require,module,exports){
 const ENS = require('../')
 const HttpProvider = require('ethjs-provider-http')
+const networkMap = require('../lib/network-map.json')
 let ens
 
 // For MetaMask or Mist compatibility:
 window.addEventListener('load', function() {
+
   if (typeof window.web3 !== 'undefined') {
     console.log('web3 browser detected, using.')
-    ens = new ENS({ provider: web3.currentProvider, network: '3' })
+    web3.version.getNetwork(function (err, network) {
+      if (err) {
+        return resultField.innerText = 'There was a problem: ' + err.message
+      }
+      ens = new ENS({ provider: web3.currentProvider, network: network })
+    })
   } else {
     console.log('no web3 browser detected, using infura.')
     const provider = new HttpProvider('https://miannet.infura.io')
     ens = new ENS({ provider, network: '1' })
   }
+
 })
 
 searchButton.addEventListener('click', function() {
@@ -2899,7 +2907,7 @@ searchButton.addEventListener('click', function() {
 
 })
 
-},{"../":9,"ethjs-provider-http":20}],9:[function(require,module,exports){
+},{"../":9,"../lib/network-map.json":10,"ethjs-provider-http":21}],9:[function(require,module,exports){
 // External Deps
 const Eth = require('ethjs-query')
 const EthContract = require('ethjs-contract')
@@ -3049,7 +3057,18 @@ class Ens {
 
 module.exports = Ens
 
-},{"./abis/registry.json":6,"./abis/resolver.json":7,"eth-ens-namehash":11,"ethereum-ens-network-map":12,"ethjs-contract":16,"ethjs-query":21}],10:[function(require,module,exports){
+},{"./abis/registry.json":6,"./abis/resolver.json":7,"eth-ens-namehash":12,"ethereum-ens-network-map":13,"ethjs-contract":17,"ethjs-query":22}],10:[function(require,module,exports){
+module.exports={
+  "1": {
+    "registry": "314159265dd8dbb310642f98f50c066173c1259b"
+  },
+  "3": {
+    "registry": "112234455c3a32fd11230c42e7bccd4a84e02010",
+    "resolver": "C68De5B43C3d980B0C110A77a5F78d3c4c4d63B4"
+  }
+}
+
+},{}],11:[function(require,module,exports){
 (function (module, exports) {
   'use strict';
 
@@ -6478,7 +6497,7 @@ module.exports = Ens
   };
 })(typeof module === 'undefined' || module, this);
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (Buffer){
 var sha3 = require('js-sha3').keccak_256
 var uts46 = require('idna-uts46')
@@ -6509,7 +6528,7 @@ function normalize(name) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":2,"idna-uts46":26,"js-sha3":28}],12:[function(require,module,exports){
+},{"buffer":2,"idna-uts46":27,"js-sha3":29}],13:[function(require,module,exports){
 module.exports = {
   // Mainnet
   '1': '0x314159265dd8dbb310642f98f50c066173c1259b',
@@ -6517,7 +6536,7 @@ module.exports = {
   '3': '0x112234455c3a32fd11230c42e7bccd4a84e02010',
 }
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -6707,7 +6726,7 @@ module.exports = {
   eventSignature: eventSignature
 };
 }).call(this,require("buffer").Buffer)
-},{"./utils/index.js":14,"buffer":2}],14:[function(require,module,exports){
+},{"./utils/index.js":15,"buffer":2}],15:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -7127,7 +7146,7 @@ module.exports = {
   getParamCoder: getParamCoder
 };
 }).call(this,require("buffer").Buffer)
-},{"bn.js":10,"buffer":2,"js-sha3":15,"number-to-bn":29}],15:[function(require,module,exports){
+},{"bn.js":11,"buffer":2,"js-sha3":16,"number-to-bn":30}],16:[function(require,module,exports){
 (function (process,global){
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
@@ -7602,7 +7621,7 @@ module.exports = {
 }(this));
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":4}],16:[function(require,module,exports){
+},{"_process":4}],17:[function(require,module,exports){
 'use strict';
 
 var abi = require('ethjs-abi'); // eslint-disable-line
@@ -7765,9 +7784,9 @@ function EthContract(query) {
 }
 
 module.exports = EthContract;
-},{"ethjs-abi":13,"ethjs-filter":18,"ethjs-util":24,"js-sha3":17}],17:[function(require,module,exports){
-arguments[4][15][0].apply(exports,arguments)
-},{"_process":4,"dup":15}],18:[function(require,module,exports){
+},{"ethjs-abi":14,"ethjs-filter":19,"ethjs-util":25,"js-sha3":18}],18:[function(require,module,exports){
+arguments[4][16][0].apply(exports,arguments)
+},{"_process":4,"dup":16}],19:[function(require,module,exports){
 'use strict';
 
 function constructFilter(filterName, query) {
@@ -7925,7 +7944,7 @@ function EthFilter(query) {
 
 // export EthFilter
 module.exports = EthFilter;
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var schema = require('ethjs-schema');
@@ -8172,7 +8191,7 @@ module.exports = {
   formatInputs: formatInputs,
   formatOutputs: formatOutputs
 };
-},{"ethjs-schema":23,"ethjs-util":24,"number-to-bn":29,"strip-hex-prefix":30}],20:[function(require,module,exports){
+},{"ethjs-schema":24,"ethjs-util":25,"number-to-bn":30,"strip-hex-prefix":31}],21:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8279,7 +8298,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 };
 
 module.exports = HttpProvider;
-},{"xhr2":31}],21:[function(require,module,exports){
+},{"xhr2":32}],22:[function(require,module,exports){
 'use strict';
 
 var format = require('ethjs-format');
@@ -8379,7 +8398,7 @@ function generateFnFor(method, methodObject) {
     });
   };
 }
-},{"ethjs-format":19,"ethjs-rpc":22}],22:[function(require,module,exports){
+},{"ethjs-format":20,"ethjs-rpc":23}],23:[function(require,module,exports){
 'use strict';
 
 module.exports = EthRPC;
@@ -8456,7 +8475,7 @@ function createPayload(data, id) {
     params: []
   }, data);
 }
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports={
   "methods": {
     "web3_clientVersion": [[], "S"],
@@ -8669,7 +8688,7 @@ module.exports={
   }
 }
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -8892,7 +8911,7 @@ module.exports = {
   isHexString: isHexString
 };
 }).call(this,require("buffer").Buffer)
-},{"buffer":2,"is-hex-prefixed":27,"strip-hex-prefix":30}],25:[function(require,module,exports){
+},{"buffer":2,"is-hex-prefixed":28,"strip-hex-prefix":31}],26:[function(require,module,exports){
 /* This file is generated from the Unicode IDNA table, using
    the build-unicode-tables.py script. Please edit that
    script instead of this file. */
@@ -9651,7 +9670,7 @@ return {
 };
 }));
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /* istanbul ignore next */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -9771,7 +9790,7 @@ return {
 };
 }));
 
-},{"./idna-map":25,"punycode":5}],27:[function(require,module,exports){
+},{"./idna-map":26,"punycode":5}],28:[function(require,module,exports){
 /**
  * Returns a `Boolean` on whether or not the a `String` starts with '0x'
  * @param {String} str the string input value
@@ -9786,7 +9805,7 @@ module.exports = function isHexPrefixed(str) {
   return str.slice(0, 2) === '0x';
 }
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (process,global){
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
@@ -10265,7 +10284,7 @@ module.exports = function isHexPrefixed(str) {
 })();
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":4}],29:[function(require,module,exports){
+},{"_process":4}],30:[function(require,module,exports){
 var BN = require('bn.js');
 var stripHexPrefix = require('strip-hex-prefix');
 
@@ -10305,7 +10324,7 @@ module.exports = function numberToBN(arg) {
   throw new Error('[number-to-bn] while converting number ' + JSON.stringify(arg) + ' to BN.js instance, error: invalid number value. Value must be an integer, hex string, BN or BigNumber instance. Note, decimals are not supported.');
 }
 
-},{"bn.js":10,"strip-hex-prefix":30}],30:[function(require,module,exports){
+},{"bn.js":11,"strip-hex-prefix":31}],31:[function(require,module,exports){
 var isHexPrefixed = require('is-hex-prefixed');
 
 /**
@@ -10321,7 +10340,7 @@ module.exports = function stripHexPrefix(str) {
   return isHexPrefixed(str) ? str.slice(2) : str;
 }
 
-},{"is-hex-prefixed":27}],31:[function(require,module,exports){
+},{"is-hex-prefixed":28}],32:[function(require,module,exports){
 module.exports = XMLHttpRequest;
 
 },{}]},{},[8]);
