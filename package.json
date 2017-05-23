@@ -1,6 +1,6 @@
 {
   "name": "ethjs-ens",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An ENS interface module built on EthJS.",
   "main": "index.js",
   "scripts": {

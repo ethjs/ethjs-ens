@@ -12,6 +12,7 @@ const namehash = require('eth-ens-namehash')
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
 const notFound = 'ENS name not defined.'
+const badName = 'Illegal Character for ENS.'
 
 const provider = TestRPC.provider()
 const eth = new Eth(provider)
@@ -163,6 +164,36 @@ test('#reverse() throws on unknown address.', function (t) {
   })
 })
 
+test('#getNamehash() with good name', function (t) {
+  t.plan(1)
+  ens.getNamehash('dan.eth')
+  .then((hash) => {
+    t.ok(hash, 'success')
+  })
+  .catch((reason) => {
+    t.equal(reason, null, 'should not throw')
+  })
+})
+
+test('#getNamehash() with bad name', function (t) {
+  t.plan(1)
+  ens.getNamehash('dino dan.eth')
+  .then((hash) => {
+    t.ok(false, 'should not resolve')
+  })
+  .catch((reason) => {
+    t.equal(reason.message, badName, 'should throw')
+  })
+})
+
+test('#lookup() with illegal char throws', function (t) {
+  t.plan(1)
+  ens.lookup('dino dan.eth')
+  .catch((reason) => {
+    t.ok(reason)
+    t.end()
+  })
+})
 
 function pollForTransaction(txHash) {
   let tx
