@@ -1,6 +1,7 @@
 const test = require('tape')
 const HttpProvider = require('ethjs-provider-http')
 const provider = new HttpProvider('https://ropsten.infura.io')
+const notFound = 'ENS name not defined.'
 
 const ENS = require('../')
 const ens = new ENS({ provider, network: '3' })
@@ -33,7 +34,7 @@ test('getOwner for nobodywantsthisdomain.eth', function (t) {
 
   ens.getOwner('nobodywantsthisdomain.eth')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -42,7 +43,7 @@ test('getOwner empty name', function (t) {
 
   ens.getOwner('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -51,7 +52,7 @@ test('getResolver empty name', function (t) {
 
   ens.getOwner('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -127,7 +128,7 @@ test('lookup nobodywantsthisdomain.eth address', function (t) {
 
   ens.lookup('nobodywantsthisdomain.eth')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -141,7 +142,7 @@ test('lookup bar.eth address', function (t) {
   })
   .catch((reason) => {
     console.log('VACATION RENTALS FAIL')
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -150,7 +151,7 @@ test('lookup empty address', function (t) {
 
   ens.lookup('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
