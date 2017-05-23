@@ -12,8 +12,7 @@ const networkMap = require('ethereum-ens-network-map')
 const emptyHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const emptyAddr = '0x0000000000000000000000000000000000000000'
 
-const NotFoundError = new Error('ENS name not found.')
-const ResolverNotFound = new Error('ENS resolver not found.')
+const NotFoundError = new Error('ENS name not defined.')
 
 class Ens {
 
@@ -102,7 +101,7 @@ class Ens {
     .then((result) => {
       const resolverAddress = result[0]
       if (resolverAddress === emptyAddr) {
-        throw ResolverNotFound
+        throw NotFoundError
       }
       return resolverAddress
     })
@@ -114,12 +113,6 @@ class Ens {
       return resolver.addr(node)
     })
     .then(result => result[0])
-    .catch((reason) => {
-      if (reason === ResolverNotFound) {
-        return this.getOwnerForNode(node)
-      }
-      throw reason
-    })
   }
 
   reverse (address) {

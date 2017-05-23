@@ -11,6 +11,7 @@ const ENS = require('../')
 const namehash = require('eth-ens-namehash')
 
 const emptyAddress = '0x0000000000000000000000000000000000000000'
+const notFound = 'ENS name not defined.'
 
 const provider = TestRPC.provider()
 const eth = new Eth(provider)
@@ -66,7 +67,7 @@ test('setup', { timeout: 5000 }, function (t) {
 test('#getResolver() with invalid name should throw', function (t) {
   ens.getResolver('havasupai.eth')
   .catch((result) => {
-    t.equal(result.message, 'ENS resolver not found.')
+    t.equal(result.message, notFound)
     t.end()
   })
 })
@@ -104,10 +105,18 @@ test('#lookup() should get resolver addresses', function (t) {
   })
 })
 
-test('#lookup() with bad name should throw', function (t) {
+test('#lookup() name with no resolver should throw', function (t) {
   ens.lookup('cardassian.eth')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, 'ENS name not defined.')
+    t.end()
+  })
+})
+
+test('#lookup() with unregistered should throw', function (t) {
+  ens.lookup('blargadegh.eth')
+  .catch((reason) => {
+    t.equal(reason.message, notFound)
     t.end()
   })
 })
