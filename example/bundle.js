@@ -34,22 +34,22 @@ function placeHoldersCount (b64) {
 
 function byteLength (b64) {
   // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
+  return (b64.length * 3 / 4) - placeHoldersCount(b64)
 }
 
 function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
+  var i, l, tmp, placeHolders, arr
   var len = b64.length
   placeHolders = placeHoldersCount(b64)
 
-  arr = new Arr(len * 3 / 4 - placeHolders)
+  arr = new Arr((len * 3 / 4) - placeHolders)
 
   // if there are placeholders, only get up to the last complete 4 chars
   l = placeHolders > 0 ? len - 4 : len
 
   var L = 0
 
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+  for (i = 0; i < l; i += 4) {
     tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
     arr[L++] = (tmp >> 16) & 0xFF
     arr[L++] = (tmp >> 8) & 0xFF
@@ -2079,6 +2079,10 @@ process.off = noop;
 process.removeListener = noop;
 process.removeAllListeners = noop;
 process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
 
 process.binding = function (name) {
     throw new Error('process.binding is not supported');
@@ -2884,7 +2888,7 @@ window.addEventListener('load', function() {
     })
   } else {
     console.log('no web3 browser detected, using infura.')
-    const provider = new HttpProvider('https://miannet.infura.io')
+    const provider = new HttpProvider('https://mainnet.infura.io')
     ens = new ENS({ provider, network: '1' })
   }
 
@@ -2922,8 +2926,8 @@ const networkMap = require('ethereum-ens-network-map')
 const emptyHash = '0x0000000000000000000000000000000000000000000000000000000000000000'
 const emptyAddr = '0x0000000000000000000000000000000000000000'
 
-const NotFoundError = new Error('ENS name not found.')
-const ResolverNotFound = new Error('ENS resolver not found.')
+const NotFoundError = new Error('ENS name not defined.')
+const BadCharacterError = new Error('Illegal Character for ENS.')
 
 class Ens {
 
@@ -2958,18 +2962,26 @@ class Ens {
   }
 
   lookup (name = '') {
-    const node = namehash(name)
-    if (node === emptyHash) {
-      console.log('empty hash')
-      return Promise.reject(NotFoundError)
-    }
+    return this.getNamehash(name)
+    .then((node) => {
+      if (node === emptyHash) {
+        return Promise.reject(NotFoundError)
+      }
+      return this.resolveAddressForNode(node)
+    })
+  }
 
-    return this.resolveAddressForNode(node)
+  getNamehash (name) {
+    try {
+      return Promise.resolve(namehash(name))
+    } catch (e) {
+      return Promise.reject(BadCharacterError)
+    }
   }
 
   getOwner (name = '') {
-    const node = namehash(name)
-    return this.getOwnerForNode(node)
+    return this.getNamehash(name)
+    .then(node => this.getOwnerForNode(node))
   }
 
   getOwnerForNode (node) {
@@ -2980,7 +2992,6 @@ class Ens {
     .then((result) => {
       const ownerAddress = result[0]
       if (ownerAddress === emptyAddr) {
-        console.log('owner is empty addr')
         throw NotFoundError
       }
 
@@ -2989,13 +3000,13 @@ class Ens {
   }
 
   getResolver (name = '') {
-    const node = namehash(name)
-    return this.getResolverForNode(node)
+    return this.getNamehash(name)
+    .then(node => this.getResolverForNode(node))
   }
 
   getResolverAddress (name = '') {
-    const node = namehash(name)
-    return this.getResolverAddressForNode(node)
+    return this.getNamehash(name)
+    .then(node => this.getResolverAddressForNode(node))
   }
 
   getResolverForNode (node) {
@@ -3014,7 +3025,7 @@ class Ens {
     .then((result) => {
       const resolverAddress = result[0]
       if (resolverAddress === emptyAddr) {
-        throw ResolverNotFound
+        throw NotFoundError
       }
       return resolverAddress
     })
@@ -3026,12 +3037,6 @@ class Ens {
       return resolver.addr(node)
     })
     .then(result => result[0])
-    .catch((reason) => {
-      if (reason === ResolverNotFound) {
-        return this.getOwnerForNode(node)
-      }
-      throw reason
-    })
   }
 
   reverse (address) {
@@ -3045,11 +3050,9 @@ class Ens {
 
     const name = `${address.toLowerCase()}.addr.reverse`
     const node = namehash(name)
-
-    return this.getResolverForNode(node)
-    .then((resolver) => {
-      return resolver.name(node)
-    })
+    return this.getNamehash(name)
+    .then(node => this.getResolverForNode(node))
+    .then(resolver => resolver.name(node))
     .then(results => results[0])
   }
 
