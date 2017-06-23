@@ -16,7 +16,7 @@ window.addEventListener('load', function() {
     })
   } else {
     console.log('no web3 browser detected, using infura.')
-    const provider = new HttpProvider('https://miannet.infura.io')
+    const provider = new HttpProvider('https://mainnet.infura.io')
     ens = new ENS({ provider, network: '1' })
   }
 
