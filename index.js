@@ -16,7 +16,6 @@ const NotFoundError = new Error('ENS name not defined.')
 const BadCharacterError = new Error('Illegal Character for ENS.')
 
 class Ens {
-
   constructor (opts = {}) {
     const { provider, network } = opts
     let { registryAddress } = opts
@@ -49,12 +48,12 @@ class Ens {
 
   lookup (name = '') {
     return this.getNamehash(name)
-    .then((node) => {
-      if (node === emptyHash) {
-        return Promise.reject(NotFoundError)
-      }
-      return this.resolveAddressForNode(node)
-    })
+      .then((node) => {
+        if (node === emptyHash) {
+          return Promise.reject(NotFoundError)
+        }
+        return this.resolveAddressForNode(node)
+      })
   }
 
   getNamehash (name) {
@@ -67,7 +66,7 @@ class Ens {
 
   getOwner (name = '') {
     return this.getNamehash(name)
-    .then(node => this.getOwnerForNode(node))
+      .then(node => this.getOwnerForNode(node))
   }
 
   getOwnerForNode (node) {
@@ -75,24 +74,24 @@ class Ens {
       return Promise.reject(NotFoundError)
     }
     return this.registry.owner(node)
-    .then((result) => {
-      const ownerAddress = result[0]
-      if (ownerAddress === emptyAddr) {
-        throw NotFoundError
-      }
+      .then((result) => {
+        const ownerAddress = result[0]
+        if (ownerAddress === emptyAddr) {
+          throw NotFoundError
+        }
 
-      return ownerAddress
-    })
+        return ownerAddress
+      })
   }
 
   getResolver (name = '') {
     return this.getNamehash(name)
-    .then(node => this.getResolverForNode(node))
+      .then(node => this.getResolverForNode(node))
   }
 
   getResolverAddress (name = '') {
     return this.getNamehash(name)
-    .then(node => this.getResolverAddressForNode(node))
+      .then(node => this.getResolverAddressForNode(node))
   }
 
   getResolverForNode (node) {
@@ -101,28 +100,28 @@ class Ens {
     }
 
     return this.getResolverAddressForNode(node)
-    .then((resolverAddress) => {
-      return this.Resolver.at(resolverAddress)
-    })
+      .then((resolverAddress) => {
+        return this.Resolver.at(resolverAddress)
+      })
   }
 
   getResolverAddressForNode (node) {
     return this.registry.resolver(node)
-    .then((result) => {
-      const resolverAddress = result[0]
-      if (resolverAddress === emptyAddr) {
-        throw NotFoundError
-      }
-      return resolverAddress
-    })
+      .then((result) => {
+        const resolverAddress = result[0]
+        if (resolverAddress === emptyAddr) {
+          throw NotFoundError
+        }
+        return resolverAddress
+      })
   }
 
   resolveAddressForNode (node) {
     return this.getResolverForNode(node)
-    .then((resolver) => {
-      return resolver.addr(node)
-    })
-    .then(result => result[0])
+      .then((resolver) => {
+        return resolver.addr(node)
+      })
+      .then(result => result[0])
   }
 
   reverse (address) {
@@ -137,11 +136,10 @@ class Ens {
     const name = `${address.toLowerCase()}.addr.reverse`
     const node = namehash(name)
     return this.getNamehash(name)
-    .then(node => this.getResolverForNode(node))
-    .then(resolver => resolver.name(node))
-    .then(results => results[0])
+      .then(node => this.getResolverForNode(node))
+      .then(resolver => resolver.name(node))
+      .then(results => results[0])
   }
-
 }
 
 module.exports = Ens
