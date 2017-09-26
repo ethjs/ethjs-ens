@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.12.0",
+    "eslint": "^4.7.1",
     "ethereumjs-testrpc": "^3.0.3",
     "ethjs": "^0.2.5",
     "ethjs-provider-http": "^0.1.6",
