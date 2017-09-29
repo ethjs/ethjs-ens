@@ -1,6 +1,7 @@
 const test = require('tape')
 const HttpProvider = require('ethjs-provider-http')
 const provider = new HttpProvider('https://mainnet.infura.io')
+const notFound = 'ENS name not defined.'
 
 const ENS = require('../')
 const ens = new ENS({ provider, network: '1' })
@@ -23,7 +24,7 @@ test('lookup apt-get.eth', function (t) {
 
   ens.lookup('apt-get.eth')
   .then((address) => {
-    const expected = '0xd1ccfbf0a0dc2a9ed8a496b07e81dd8ecd7cb00e'
+    const expected = '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb'
     t.equal(address, expected)
     t.end()
   })
@@ -42,7 +43,7 @@ test('getOwner for nobodywantsthisdomain.eth', function (t) {
     t.end()
   })
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -51,7 +52,7 @@ test('getOwner empty name', function (t) {
 
   ens.getOwner('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -60,17 +61,17 @@ test('getResolver empty name', function (t) {
 
   ens.getOwner('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
-test('reverse vitalik.eth address should return address', function (t) {
+test('reverse alex.vandesande.eth address should return address', function (t) {
   t.plan(1)
 
-  const address = '0xd1ccfbf0a0dc2a9ed8a496b07e81dd8ecd7cb00e'
+  const address = '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb'
   ens.reverse(address)
   .then((name) => {
-    const expected = 'vitalik.eth'
+    const expected = 'alex.vandesande.eth'
     t.equal(name, expected)
   })
   .catch((reason) => {
@@ -83,7 +84,7 @@ test('lookup nobodywantsthisdomain.eth address', function (t) {
 
   ens.lookup('nobodywantsthisdomain.eth')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -95,7 +96,7 @@ test('lookup bar.eth address', function (t) {
     t.equal(address, '0xd0b85aad460f5835c2349fbdd065b2389c921ce1')
   })
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -104,7 +105,6 @@ test('lookup empty address', function (t) {
 
   ens.lookup('')
   .catch((reason) => {
-    t.equal(reason.message, 'ENS name not found.')
+    t.equal(reason.message, notFound)
   })
 })
-
