@@ -20,7 +20,7 @@ const ENS = require('ethjs-ens')
 const HttpProvider = require('ethjs-provider-http')
 
 // For MetaMask or Mist compatibility:
-if (typeof window.web3 !== 'undefined') {
+if (typeof window === 'object' && typeof window.web3 !== 'undefined') {
   setupEns(web3.currentProvider)
 } else {
   const provider = new HttpProvider('https://ropsten.infura.io')
