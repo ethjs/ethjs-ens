@@ -1,6 +1,6 @@
 # EthJS ENS
 
-[![CircleCI](https://circleci.com/gh/flyswatter/ethjs-ens.svg?style=svg)](https://circleci.com/gh/flyswatter/ethjs-ens)
+[![CircleCI](https://circleci.com/gh/ethjs/ethjs-ens.svg?style=svg)](https://circleci.com/gh/ethjs/ethjs-ens)
 [![Coverage Status](https://coveralls.io/repos/github/ethjs/ethjs-ens/badge.svg?branch=master)](https://coveralls.io/github/ethjs/ethjs-ens?branch=master)
 
 A convenience interface for using the Ethereum Name Service, based on the [EthJS contract abstraction](https://github.com/ethjs/ethjs-contract).
@@ -16,7 +16,7 @@ Install from npm:
 ## Usage
 
 ```javascript
-const ENS = require('../')
+const ENS = require('ethjs-ens')
 const HttpProvider = require('ethjs-provider-http')
 
 // For MetaMask or Mist compatibility:
@@ -71,7 +71,7 @@ Returns a promise that resolves a string if a name exists, or throws if it does 
 
 ### ens.registry
 
-An [ethjs contract](https://github.com/flyswatter/ethjs-ens) instance initialized for the specified network's address.
+An [ethjs contract](https://github.com/ethjs/ethjs-ens) instance initialized for the specified network's address.
 
 Implements the registry interface specified in [EIP 137](https://github.com/ethereum/EIPs/issues/137):
 
