@@ -1,2 +1,0 @@
-require('./testrpc')
-require('./ropsten')

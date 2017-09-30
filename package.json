@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
-    "test": "npm run lint && istanbul cover test && npm run coveralls",
+    "test": "npm run lint && istanbul cover tape test/*.js && npm run coveralls",
     "build": "browserify example/index.js -o example/bundle.js",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/flyswatter/ethjs-ens.git"
+    "url": "git+ssh://git@github.com/ethjs/ethjs-ens.git"
   },
   "keywords": [
     "Ethereum",
@@ -22,9 +22,9 @@
   "author": "Dan Finlay",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/flyswatter/ethjs-ens/issues"
+    "url": "https://github.com/ethjs/ethjs-ens/issues"
   },
-  "homepage": "https://github.com/flyswatter/ethjs-ens#readme",
+  "homepage": "https://github.com/ethjs/ethjs-ens#readme",
   "dependencies": {
     "eth-ens-namehash": "^1.0.2",
     "ethereum-ens-network-map": "^1.0.0",

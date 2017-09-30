@@ -106,9 +106,9 @@ test('lookup eth owner', function (t) {
 test('lookup resistance.eth address', function (t) {
   t.plan(1)
 
-  ens.lookup('vitalik.eth')
+  ens.lookup('resistance.eth')
   .then((address) => {
-    const expected = '0x5f8f68a0d1cbc75f6ef764a44619277092c32df0'
+    const expected = '0x3d00aea89390613a7a5d874078cf9e82bf794b01'
     t.equal(address, expected)
   })
 })
@@ -117,9 +117,8 @@ test('lookup vitalik.eth address should fail to owner', function (t) {
   t.plan(1)
 
   ens.lookup('vitalik.eth')
-  .then((address) => {
-    const expected = '0x5f8f68a0d1cbc75f6ef764a44619277092c32df0'
-    t.equal(address, expected)
+  .catch((reason) => {
+    t.equal(reason.message, notFound)
   })
 })
 
@@ -154,4 +153,3 @@ test('lookup empty address', function (t) {
     t.equal(reason.message, notFound)
   })
 })
-
