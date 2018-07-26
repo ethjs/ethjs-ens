@@ -1,4 +1,4 @@
-const ENS = require('../')
+const ENS = require('../dist/index')
 const HttpProvider = require('ethjs-provider-http')
 const networkMap = require('../lib/network-map.json')
 let ens

@@ -19,8 +19,8 @@ const eth = new Eth(provider)
 const web3 = new Web3(provider)
 const contract = new EthContract(eth)
 
-const registryAbi = require('../abis/registry.json')
-const resolverAbi = require('../abis/resolver.json')
+const registryAbi = require('../src/abis/registry.json')
+const resolverAbi = require('../src/abis/resolver.json')
 const source = fs.readFileSync(__dirname + '/ens.sol').toString(); const compiled = solc.compile(source, 1)
 const deployer = compiled.contracts[':DeployENS']
 let deploy, ensRoot, ens, accounts, deployRoot
