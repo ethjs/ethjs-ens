@@ -2,12 +2,14 @@
   "name": "ethjs-ens",
   "version": "2.0.1",
   "description": "An ENS interface module built on EthJS.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint index.js",
+    "lint": "eslint src/index.js",
     "test": "npm run lint && istanbul cover tape test/*.js && npm run coveralls",
     "build": "browserify example/index.js -o example/bundle.js",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "prebuild": "npm run build:babel",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "build:babel": "babel src --out-dir dist --copy-files"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,9 @@
     "EthJS"
   ],
   "author": "Dan Finlay",
+  "contributors": [
+    "jchimien@gmail.com"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ethjs/ethjs-ens/issues"
@@ -32,6 +37,9 @@
     "ethjs-query": "^0.2.4"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "browserify": "^16.2.2",
     "coveralls": "^2.12.0",
     "eslint": "^4.7.1",
     "ethereumjs-testrpc": "^3.0.3",
