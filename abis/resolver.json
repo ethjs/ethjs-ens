@@ -41,6 +41,23 @@
         "type": "bytes32"
       }
     ],
+    "name": "contentHash",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "node",
+        "type": "bytes32"
+      }
+    ],
     "name": "name",
     "outputs": [
       {
@@ -97,6 +114,22 @@
       {
         "name": "hash",
         "type": "bytes32"
+      }
+    ],
+    "name": "setContent",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "node",
+        "type": "bytes32"
+      },
+      {
+        "name": "hash",
+        "type": "bytes"
       }
     ],
     "name": "setContent",
