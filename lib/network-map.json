@@ -5,5 +5,9 @@
   "3": {
     "registry": "112234455c3a32fd11230c42e7bccd4a84e02010",
     "resolver": "C68De5B43C3d980B0C110A77a5F78d3c4c4d63B4"
+  },
+  "5": {
+    "registry": "112234455c3a32fd11230c42e7bccd4a84e02010",
+    "resolver": "c1EA41786094D1fBE5aded033B5370d51F7a3F96"
   }
 }
