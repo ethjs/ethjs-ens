@@ -60,7 +60,7 @@ Returns a [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 If a matching name can not be found, will throw:
 
 ```javascript
-new Error('ENS name not found.')
+new Error('ENS name not defined.')
 ```
 
 ### ens.reverse( address )
